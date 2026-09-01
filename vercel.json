@@ -1,6 +1,12 @@
 {
   "buildCommand": "bash build_files.sh",
   "outputDirectory": "staticfiles",
+  "builds": [
+    {
+      "src": "config/wsgi.py",
+      "use": "@vercel/python"
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "config/wsgi.py" }
   ]
