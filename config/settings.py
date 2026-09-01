@@ -118,11 +118,6 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-# Whitenoise configuration
-# Gunakan storage manifest hanya di production agar admin di development tetap memuat CSS bawaan Django.
-if not DEBUG:
-    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
 import cloudinary as _cloudinary
 _cloudinary_url = config('CLOUDINARY_URL', default='')
 if _cloudinary_url:
@@ -136,7 +131,15 @@ if _cloudinary_url:
 else:
     CLOUDINARY_STORAGE = {}
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+# Whitenoise & Cloudinary Storage configuration (Django 5+)
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage" if _cloudinary_url else "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage" if not DEBUG else "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
