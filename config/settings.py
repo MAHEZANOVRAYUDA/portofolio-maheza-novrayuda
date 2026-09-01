@@ -118,15 +118,16 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
-import cloudinary as _cloudinary
+import os
 _cloudinary_url = config('CLOUDINARY_URL', default='')
-if _cloudinary_url:
-    _cloudinary.config(CLOUDINARY_URL=_cloudinary_url)
-    _parsed_cloud = _cloudinary.config()
+if _cloudinary_url.startswith('cloudinary://'):
+    _creds = _cloudinary_url.replace('cloudinary://', '')
+    _api_key_secret, _cloud_name = _creds.split('@')
+    _api_key, _api_secret = _api_key_secret.split(':')
     CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': _parsed_cloud.cloud_name,
-        'API_KEY': _parsed_cloud.api_key,
-        'API_SECRET': _parsed_cloud.api_secret,
+        'CLOUD_NAME': _cloud_name,
+        'API_KEY': _api_key,
+        'API_SECRET': _api_secret,
     }
 else:
     CLOUDINARY_STORAGE = {}
