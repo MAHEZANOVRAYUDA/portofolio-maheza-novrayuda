@@ -34,6 +34,13 @@
     <!-- AOS - Animate On Scroll -->
     <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css" />
 
+    <!-- HTMX for SPA-like instant transitions -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    <!-- NProgress for loading bar -->
+    <link rel="stylesheet" href="https://unpkg.com/nprogress@0.2.0/nprogress.css" />
+    <script src="https://unpkg.com/nprogress@0.2.0/nprogress.js"></script>
+
     <!-- Tailwind CSS -->
     <link rel="stylesheet" href="{% static 'css/output.css' %}">
 
@@ -116,10 +123,36 @@
         }
     </style>
 
+    <!-- Preload Fonts -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" as="style">
+
+    <!-- JSON-LD SEO Schema for Google Ranking -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "{{ profile.name|default:'Maheza Novrayuda' }}",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "jobTitle": "{% if profile %}{{ profile.hero_title }}{% else %}AI & Data Engineer{% endif %}",
+      "sameAs": [
+        "{% if profile and profile.github_url %}{{ profile.github_url }}{% endif %}",
+        "{% if profile and profile.linkedin_url %}{{ profile.linkedin_url }}{% endif %}",
+        "{% if profile and profile.instagram_url %}{{ profile.instagram_url }}{% endif %}"
+      ]
+    }
+    </script>
+
+    <style>
+        /* Custom NProgress */
+        #nprogress .bar { background: #38bdf8 !important; height: 3px !important; }
+        #nprogress .peg { box-shadow: 0 0 10px #38bdf8, 0 0 5px #38bdf8 !important; }
+        #nprogress .spinner { display: none !important; }
+    </style>
+
     {% block extra_head %}{% endblock %}
 </head>
 
-<body class="min-h-screen antialiased selection:bg-sky-500/30 selection:text-sky-100">
+<body class="min-h-screen antialiased selection:bg-sky-500/30 selection:text-sky-100" hx-boost="true">
     <!-- Noise overlay -->
     <div class="fixed inset-0 pointer-events-none z-[-1]"
         style="background: url('https://grainy-gradients.vercel.app/noise.svg'); opacity: 0.06;"></div>
@@ -309,9 +342,10 @@
         }
 
         // Floating particles
-        (function createParticles() {
+        function createParticles() {
             const container = document.getElementById('particles');
             if (!container) return;
+            container.innerHTML = ''; // clear first
             for (let i = 0; i < 20; i++) {
                 const span = document.createElement('span');
                 span.style.left = Math.random() * 100 + '%';
@@ -320,7 +354,31 @@
                 span.style.width = span.style.height = (Math.random() * 3 + 1) + 'px';
                 container.appendChild(span);
             }
-        })();
+        }
+        createParticles(); // Initial load
+
+        // HTMX Integration for SPA transitions
+        document.body.addEventListener('htmx:configRequest', (event) => {
+            NProgress.start();
+        });
+        document.body.addEventListener('htmx:afterOnLoad', () => {
+            NProgress.done();
+            createParticles(); // Re-init particles
+            AOS.init({
+                duration: 700,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 60,
+            });
+            // Re-bind menu events if needed
+            const mobileMenu = document.getElementById('mobile-menu');
+            if(mobileMenu && mobileMenu.classList.contains('open')) {
+                mobileMenu.classList.remove('open');
+                document.getElementById('icon-open').classList.remove('hidden');
+                document.getElementById('icon-close').classList.add('hidden');
+            }
+            window.scrollTo(0, 0);
+        });
     </script>
 
     {% block extra_js %}{% endblock %}

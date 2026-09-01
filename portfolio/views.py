@@ -133,16 +133,22 @@ class ContactView(FormView):
     def form_valid(self, form):
         from django.core.mail import send_mail
         from django.conf import settings
+        import threading
         
         obj = form.save()
         
-        send_mail(
-            subject=f"Pesan baru dari {obj.name}",
-            message=obj.message,
-            from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'webmaster@localhost'),
-            recipient_list=[getattr(settings, 'CONTACT_NOTIFY_EMAIL', 'admin@localhost')],
-            fail_silently=True,
-        )
+        def send_email_async():
+            send_mail(
+                subject=f"Pesan baru dari {obj.name}",
+                message=obj.message,
+                from_email=getattr(settings, 'DEFAULT_FROM_EMAIL', 'webmaster@localhost'),
+                recipient_list=[getattr(settings, 'CONTACT_NOTIFY_EMAIL', 'admin@localhost')],
+                fail_silently=True,
+            )
+            
+        # Jalankan pengiriman email di thread terpisah agar tidak memblokir response HTTP
+        email_thread = threading.Thread(target=send_email_async)
+        email_thread.start()
         
         messages.success(self.request, 'Terima kasih! Pesan Anda sudah terkirim.')
         return super().form_valid(form)
