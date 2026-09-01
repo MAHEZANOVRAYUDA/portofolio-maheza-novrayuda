@@ -1,0 +1,7 @@
+{
+  "buildCommand": "bash build_files.sh",
+  "outputDirectory": "staticfiles",
+  "rewrites": [
+    { "source": "/(.*)", "destination": "config/wsgi.py" }
+  ]
+}

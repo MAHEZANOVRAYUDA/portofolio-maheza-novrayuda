@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+
+{% block title %}
+Projects - {% if profile %}{{ profile.name }}{% else %}AI Engineer{% endif %}
+{% endblock %}
+
+{% block content %}
+<section class="max-w-6xl mx-auto pt-6 md:pt-10">
+    <div class="mb-10 md:mb-14" data-aos="fade-up">
+        <p class="text-xs font-semibold uppercase tracking-[0.35em] text-sky-400/80 mb-3">Projects</p>
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tight text-slate-50 mb-4">
+            All <span class="gradient-text">AI & Data</span> Projects
+        </h1>
+        <p class="text-sm md:text-base text-slate-300 max-w-2xl leading-relaxed">
+            Koleksi lengkap project yang sudah saya kerjakan — mulai dari machine learning, NLP, computer vision, hingga
+            data engineering.
+        </p>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="mb-8 flex flex-wrap gap-2" data-aos="fade-up" data-aos-delay="100">
+        <button
+            class="filter-btn active px-4 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-slate-300"
+            data-filter="all" onclick="filterProjects('all', this)">
+            Semua
+        </button>
+        {% for category, skills_list in skills_by_category.items %}
+        <button
+            class="filter-btn px-4 py-1.5 rounded-full text-xs font-medium bg-white/5 border border-white/10 text-slate-400 hover:text-slate-200"
+            data-filter="{{ category }}" onclick="filterProjects('{{ category }}', this)">
+            {{ category }}
+        </button>
+        {% endfor %}
+    </div>
+
+    <!-- Projects Grid -->
+    <div class="grid gap-7 md:grid-cols-2 lg:grid-cols-3" id="projects-grid">
+        {% for project in projects %}
+        <a href="{% url 'portfolio:project_detail' project.pk %}" class="group relative block h-full project-card"
+            data-skills="{% for s in project.skills.all %}{{ s.category }}{% if not forloop.last %},{% endif %}{% endfor %}"
+            data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:forloop.counter0 }}0">
+            <div
+                class="absolute inset-0 bg-gradient-to-r from-sky-500 to-emerald-500 rounded-2xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-500">
+            </div>
+
+            <div
+                class="relative h-full glass rounded-2xl overflow-hidden flex flex-col transition-transform duration-300 group-hover:-translate-y-1">
+                <div class="aspect-[16/9] overflow-hidden relative">
+                    {% if project.image %}
+                    <img src="{{ project.image.url }}" alt="{{ project.title }}"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
+                    {% else %}
+                    <div class="w-full h-full bg-slate-800 flex items-center justify-center text-slate-500">No Image
+                    </div>
+                    {% endif %}
+
+                    {% if project.metrics %}
+                    <div class="absolute top-3 right-3">
+                        <div
+                            class="px-3 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-emerald-500/40 text-emerald-300 text-[11px] font-semibold shadow-lg flex items-center gap-2">
+                            <div class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
+                            {{ project.metrics }}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    {% if project.featured %}
+                    <div class="absolute top-3 left-3">
+                        <div
+                            class="px-2.5 py-1 rounded-full bg-sky-500/80 backdrop-blur text-[10px] font-semibold text-white shadow-lg">
+                            ★ Featured
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="p-5 flex-1 flex flex-col">
+                    <h3
+                        class="text-base md:text-lg font-display font-semibold text-slate-100 mb-2 group-hover:text-sky-300 transition-colors">
+                        {{ project.title }}
+                    </h3>
+                    <p class="text-slate-400 text-xs md:text-sm line-clamp-2 mb-3 flex-1">
+                        {{ project.description }}
+                    </p>
+
+                    <div class="flex flex-wrap gap-1.5 mb-4">
+                        {% for skill in project.skills.all|slice:":4" %}
+                        <span
+                            class="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-slate-900 text-slate-400 border border-slate-800">
+                            {{ skill.name }}
+                        </span>
+                        {% endfor %}
+                    </div>
+
+                    <div
+                        class="flex items-center justify-between pt-3 border-t border-slate-800 text-[11px] text-slate-500">
+                        <span>{{ project.created_at|date:"M Y" }}</span>
+                        <span class="group-hover:translate-x-1 transition-transform text-sky-400 font-medium">Detail
+                            &rarr;</span>
+                    </div>
+                </div>
+            </div>
+        </a>
+        {% empty %}
+        <div class="col-span-full text-center py-16">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-800/50 flex items-center justify-center">
+                <svg class="w-8 h-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+            </div>
+            <p class="text-slate-500">Belum ada project. Tambahkan lewat <a href="/admin/"
+                    class="text-sky-400 hover:underline">Django admin</a>.</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function filterProjects(category, btn) {
+        // Update active filter button
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        // Filter project cards
+        const cards = document.querySelectorAll('.project-card');
+        cards.forEach(card => {
+            const skills = card.getAttribute('data-skills') || '';
+            if (category === 'all' || skills.includes(category)) {
+                card.style.display = '';
+                card.style.animation = 'fadeIn 0.4s ease-out';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+</script>
+{% endblock %}
