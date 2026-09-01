@@ -22,6 +22,11 @@ if not DEBUG:
     SECURE_SSL_REDIRECT = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
+    CSRF_TRUSTED_ORIGINS = [
+        'https://mahezanovrayuda.com',
+        'https://www.mahezanovrayuda.com',
+        'https://portofolio-maheza-novrayuda.vercel.app',
+    ]
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
@@ -81,7 +86,7 @@ _db_url = config('DATABASE_URL', default='sqlite:///db.sqlite3')
 DATABASES = {
     'default': dj_database_url.parse(
         _db_url,
-        conn_max_age=600,
+        conn_max_age=0,  # 0 sangat krusial untuk serverless Vercel agar koneksi Postgres tidak habis
         ssl_require=not _db_url.startswith('sqlite'),
     )
 }
