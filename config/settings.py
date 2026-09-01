@@ -14,7 +14,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = config(
     'ALLOWED_HOSTS',
-    default='mahezanovrayuda.com,www.mahezanovrayuda.com,*.vercel.app,127.0.0.1,localhost',
+    default='mahezanovrayuda.com,www.mahezanovrayuda.com,.vercel.app,127.0.0.1,localhost',
     cast=lambda v: [s.strip() for s in v.split(',')],
 )
 
