@@ -2,18 +2,21 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, TemplateView, FormView
 from django.contrib import messages
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_control
 
 from .models import Project, Skill, Profile, Achievement, Certificate, Education
 from .forms import ContactForm
 
 
+@method_decorator(cache_control(public=True, max_age=3600), name='dispatch')
 class HomeView(ListView):
     model = Project
     template_name = 'home.html'
     context_object_name = 'projects'
 
     def get_queryset(self):
-        return Project.objects.all()
+        return Project.objects.prefetch_related('skills').all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -27,7 +30,7 @@ class HomeView(ListView):
                 skills_by_category[skill.category] = []
             skills_by_category[skill.category].append(skill)
 
-        featured_projects = Project.objects.filter(featured=True)[:3]
+        featured_projects = Project.objects.prefetch_related('skills').filter(featured=True)[:3]
         featured_achievements = Achievement.objects.filter(is_featured=True)[:3]
         featured_certificates = Certificate.objects.filter(is_featured=True)[:3]
 
@@ -44,6 +47,7 @@ class HomeView(ListView):
         return context
 
 
+@method_decorator(cache_control(public=True, max_age=3600), name='dispatch')
 class AboutView(TemplateView):
     template_name = 'about.html'
 
@@ -51,7 +55,7 @@ class AboutView(TemplateView):
         context = super().get_context_data(**kwargs)
         profile = Profile.objects.first()
         skills = Skill.objects.all()
-        projects = Project.objects.all()
+        projects = Project.objects.prefetch_related('skills').all()
         achievements = Achievement.objects.all()
         certificates = Certificate.objects.all()
         educations = Education.objects.all()
@@ -75,11 +79,15 @@ class AboutView(TemplateView):
         return context
 
 
+@method_decorator(cache_control(public=True, max_age=3600), name='dispatch')
 class ProjectListView(ListView):
     """Dedicated page listing all projects with category filters."""
     model = Project
     template_name = 'projects.html'
     context_object_name = 'projects'
+    
+    def get_queryset(self):
+        return Project.objects.prefetch_related('skills').all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -140,6 +148,7 @@ class ContactView(FormView):
         return super().form_valid(form)
 
 
+@method_decorator(cache_control(public=True, max_age=3600), name='dispatch')
 class ProjectDetailView(DetailView):
     model = Project
     template_name = 'project_detail.html'

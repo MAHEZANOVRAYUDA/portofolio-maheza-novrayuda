@@ -165,7 +165,7 @@
                 <div
                     class="skill-badge flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900/70 border border-slate-700/70 text-[11px] font-medium text-slate-300">
                     {% if skill.icon %}
-                    <img src="{{ skill.icon.url }}" alt="{{ skill.name }}" class="w-4 h-4 object-contain" />
+                    <img src="{{ skill.icon.url }}" alt="{{ skill.name }}" loading="lazy" class="w-4 h-4 object-contain" />
                     {% endif %}
                     {{ skill.name }}
                 </div>
@@ -296,7 +296,7 @@
                 <!-- Image -->
                 <div class="aspect-[16/9] overflow-hidden relative">
                     {% if project.image %}
-                    <img src="{{ project.image.url }}" alt="{{ project.title }}"
+                    <img src="{{ project.image.url }}" alt="{{ project.title }}" loading="lazy"
                         class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
                     {% else %}
                     <div class="w-full h-full bg-slate-800 flex items-center justify-center text-slate-500">No Image

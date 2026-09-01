@@ -293,7 +293,7 @@ About - {% if profile %}{{ profile.name }}{% else %}AI Engineer{% endif %}
                     <span
                         class="skill-badge text-[11px] font-medium px-2.5 py-1 rounded-lg bg-slate-900/70 border border-slate-700/70 text-slate-300 flex items-center gap-1.5">
                         {% if skill.icon %}
-                        <img src="{{ skill.icon.url }}" alt="{{ skill.name }}" class="w-3.5 h-3.5 object-contain" />
+                        <img src="{{ skill.icon.url }}" alt="{{ skill.name }}" loading="lazy" class="w-3.5 h-3.5 object-contain" />
                         {% endif %}
                         {{ skill.name }}
                     </span>
