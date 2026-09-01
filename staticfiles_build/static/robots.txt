@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://mahezanovrayuda.com/sitemap.xml

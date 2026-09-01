@@ -1,0 +1,86 @@
+/* =============================================
+   Portfolio Custom Styles
+   ============================================= */
+
+/* AOS Animation Overrides */
+[data-aos] {
+    pointer-events: none;
+}
+[data-aos].aos-animate {
+    pointer-events: auto;
+}
+
+/* Typing cursor animation */
+.typing-cursor {
+    display: inline-block;
+    width: 3px;
+    height: 1em;
+    background: #0ea5e9;
+    margin-left: 2px;
+    animation: blink 1s infinite;
+    vertical-align: text-bottom;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Card hover glow */
+.card-glow {
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-glow:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 32px rgba(14, 165, 233, 0.15);
+}
+
+/* Gradient text utility */
+.gradient-text {
+    background: linear-gradient(135deg, #0ea5e9, #22d3ee, #22c55e);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Mobile menu transitions */
+#mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease, opacity 0.3s ease;
+    opacity: 0;
+}
+#mobile-menu.open {
+    max-height: 400px;
+    opacity: 1;
+}
+
+/* Skill badge hover */
+.skill-badge {
+    transition: all 0.2s ease;
+}
+.skill-badge:hover {
+    border-color: rgba(14, 165, 233, 0.6);
+    background: rgba(14, 165, 233, 0.08);
+    color: #e0f2fe;
+}
+
+/* Filter button active state */
+.filter-btn {
+    transition: all 0.2s ease;
+}
+.filter-btn.active {
+    background: rgba(14, 165, 233, 0.15);
+    border-color: rgba(14, 165, 233, 0.5);
+    color: #7dd3fc;
+}
+
+/* Smooth page fade-in */
+body {
+    animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
