@@ -12,8 +12,14 @@
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
     
-    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+    <!-- Favicons & Brand Assets -->
+    <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+    <link rel="shortcut icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
     <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <meta name="theme-color" content="#020617">
 
     <!-- Open Graph & Twitter -->
     <meta property="og:title" content="{% block og_title %}{{ profile.name|default:'Maheza Novrayuda' }} — AI & Data Engineering Portfolio{% endblock %}">
