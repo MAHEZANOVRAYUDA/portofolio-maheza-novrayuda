@@ -225,6 +225,35 @@
                 </div>
                 {% endif %}
             </div>
+
+            <!-- Industry Experience & Virtual Internship -->
+            <div class="glass craft-card rounded-2xl p-6 md:p-8">
+                <h3 class="text-lg font-display font-semibold text-slate-100 mb-5 flex items-center gap-2.5">
+                    <span class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 inline-flex items-center justify-center text-emerald-400">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                    </span>
+                    Pengalaman & Magang Industri
+                </h3>
+                <div class="relative pl-6 border-l border-slate-800 pb-2">
+                    <span class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-emerald-400 ring-4 ring-emerald-500/20"></span>
+                    <div class="mb-1">
+                        <h4 class="text-base font-semibold text-slate-100">ID/X Partners x Rakamin Academy</h4>
+                        <p class="text-sm text-emerald-300 font-medium">Data Scientist Virtual Intern</p>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-2 font-mono">Mei 2026 · Virtual Internship Project</p>
+                    <p class="text-xs md:text-sm text-slate-300 leading-relaxed mb-3">
+                        Mengembangkan end-to-end model prediksi risiko kredit (Credit Risk Assessment & Scorecard) pada dataset pinjaman historis 2007–2014. Menerapkan data cleaning, penanganan data imbalance, feature engineering berbasis Weight of Evidence (WoE) & Information Value (IV), serta deployment dashboard interaktif Streamlit.
+                    </p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">Credit Risk Modeling</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">WoE / IV Scorecard</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">AUC-ROC Optimization</span>
+                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400">Streamlit Deployment</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Right Side: Principles & Direct Details -->
@@ -716,18 +745,24 @@
     // INSTANT CLIENT-SIDE PROJECT CATEGORY FILTERING
     // =========================================================================
     function filterProjects(category, btn) {
-        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+        document.querySelectorAll('.filter-btn').forEach(b => {
+            b.classList.remove('active', 'border-sky-500/60', 'text-sky-300', 'bg-sky-500/10');
+            b.classList.add('border-slate-800', 'text-slate-400');
+        });
+        btn.classList.add('active', 'border-sky-500/60', 'text-sky-300', 'bg-sky-500/10');
+        btn.classList.remove('border-slate-800', 'text-slate-400');
 
+        const catLower = (category || 'all').toLowerCase().trim();
         const cards = document.querySelectorAll('.project-card');
+        
         cards.forEach(card => {
-            const categories = card.getAttribute('data-categories') || '';
-            if (category === 'all' || categories.includes(category)) {
+            const cardCats = (card.getAttribute('data-categories') || '').toLowerCase();
+            if (catLower === 'all' || cardCats.includes(catLower)) {
                 card.style.display = '';
-                card.style.opacity = '1';
+                setTimeout(() => { card.style.opacity = '1'; }, 10);
             } else {
-                card.style.display = 'none';
                 card.style.opacity = '0';
+                card.style.display = 'none';
             }
         });
     }

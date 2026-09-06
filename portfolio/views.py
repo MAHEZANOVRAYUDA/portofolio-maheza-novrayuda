@@ -39,9 +39,9 @@ def get_common_portfolio_context(form=None):
         'certificates': certificates,
         'featured_certificates': featured_certificates,
         'educations': educations,
-        'project_count': all_projects.count() or 8,
+        'project_count': all_projects.count() or 15,
         'skill_count': skills.count() or 35,
-        'achievement_count': achievements.count(),
+        'achievement_count': achievements.count() or 3,
         'certificate_count': certificates.count() or 5,
     }
     if form is not None:
