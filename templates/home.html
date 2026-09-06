@@ -741,43 +741,73 @@
 <!-- ======================================================================= -->
 <!-- CONTACT SECTION (#contact)                                              -->
 <!-- ======================================================================= -->
-<section id="contact" class="py-16 md:py-24 border-t border-slate-800/80" data-aos="fade-up">
-    <div class="mb-12">
+<section id="contact" class="py-16 md:py-20 border-t border-slate-800/80 scroll-mt-20">
+    <div class="mb-10">
         <p class="text-xs font-semibold uppercase tracking-[0.25em] text-sky-400 mb-2">Kontak & Kolaborasi</p>
         <h2 class="text-2xl sm:text-4xl font-display font-bold text-slate-100">
             Mari Membangun Solusi Bersama
         </h2>
-        <p class="text-xs md:text-sm text-slate-400 max-w-xl mt-2">
-            Punya ide proyek, kebutuhan analisis data, atau peluang kolaborasi? Kirimkan pesan atau hubungi langsung melalui saluran di bawah.
+        <p class="text-xs md:text-sm text-slate-400 max-w-xl mt-2 leading-relaxed">
+            Punya ide proyek, kebutuhan rekayasa data & AI, atau peluang riset bersama? Kirimkan pesan atau hubungi langsung melalui saluran di bawah.
         </p>
     </div>
 
     <div class="grid gap-8 lg:grid-cols-[1.4fr_1fr] items-start">
         <!-- Contact Form Card -->
-        <div class="glass craft-card rounded-2xl p-6 md:p-8">
-            <h3 class="text-base font-display font-bold text-slate-100 mb-6 flex items-center gap-2">
-                <span class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 inline-flex items-center justify-center text-sky-400">
+        <div class="glass craft-card rounded-2xl p-6 md:p-8 relative overflow-hidden" id="contact-card-container">
+            <h3 class="text-base font-display font-bold text-slate-100 mb-6 flex items-center gap-2.5">
+                <span class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 inline-flex items-center justify-center text-sky-400 flex-shrink-0">
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                 </span>
-                Kirim Pesan
+                <span>Kirim Pesan Langsung</span>
             </h3>
 
-            <form method="post" action="{% url 'portfolio:contact' %}" class="space-y-4">
+            <!-- Dynamic Alert Box -->
+            <div id="contact-alert" class="hidden mb-5 rounded-xl p-4 text-xs md:text-sm transition-all" role="alert" aria-live="polite"></div>
+
+            <!-- Success State View (Craftsman 6 UI States Matrix) -->
+            <div id="contact-success-state" class="hidden py-8 px-4 text-center space-y-4">
+                <div class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shadow-[0_0_30px_rgba(16,185,129,0.2)]">
+                    <svg class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
+                    </svg>
+                </div>
+                <div>
+                    <h4 class="text-lg font-display font-bold text-slate-100 mb-1.5">Pesan Berhasil Terkirim!</h4>
+                    <p class="text-xs md:text-sm text-slate-400 max-w-md mx-auto leading-relaxed" id="contact-success-msg">
+                        Terima kasih telah menghubungi saya. Pesan Anda telah diterima dan saya akan segera membalasnya melalui email secepatnya.
+                    </p>
+                </div>
+                <div class="pt-2">
+                    <button type="button" id="contact-reset-btn"
+                        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-slate-200 hover:text-sky-300 hover:border-sky-500/50 hover:bg-slate-800 transition-all cursor-pointer shadow-sm">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Kirim Pesan Lainnya
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form Body -->
+            <form id="contact-form" method="post" action="{% url 'portfolio:contact' %}" class="space-y-4">
                 {% csrf_token %}
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div>
-                        <label for="id_name" class="block text-xs font-medium text-slate-300 mb-1.5">Nama Lengkap</label>
+                        <label for="id_name" class="block text-xs font-medium text-slate-300 mb-1.5">Nama Lengkap <span class="text-rose-400">*</span></label>
                         {{ form.name }}
+                        <p id="err-name" class="mt-1 text-xs text-rose-400 hidden"></p>
                         {% if form.name.errors %}
                         <p class="mt-1 text-xs text-rose-400">{{ form.name.errors.0 }}</p>
                         {% endif %}
                     </div>
                     <div>
-                        <label for="id_email" class="block text-xs font-medium text-slate-300 mb-1.5">Alamat Email</label>
+                        <label for="id_email" class="block text-xs font-medium text-slate-300 mb-1.5">Alamat Email <span class="text-rose-400">*</span></label>
                         {{ form.email }}
+                        <p id="err-email" class="mt-1 text-xs text-rose-400 hidden"></p>
                         {% if form.email.errors %}
                         <p class="mt-1 text-xs text-rose-400">{{ form.email.errors.0 }}</p>
                         {% endif %}
@@ -787,14 +817,16 @@
                 <div>
                     <label for="id_subject" class="block text-xs font-medium text-slate-300 mb-1.5">Subjek (opsional)</label>
                     {{ form.subject }}
+                    <p id="err-subject" class="mt-1 text-xs text-rose-400 hidden"></p>
                     {% if form.subject.errors %}
                     <p class="mt-1 text-xs text-rose-400">{{ form.subject.errors.0 }}</p>
                     {% endif %}
                 </div>
 
                 <div>
-                    <label for="id_message" class="block text-xs font-medium text-slate-300 mb-1.5">Pesan Anda</label>
+                    <label for="id_message" class="block text-xs font-medium text-slate-300 mb-1.5">Pesan Anda <span class="text-rose-400">*</span></label>
                     {{ form.message }}
+                    <p id="err-message" class="mt-1 text-xs text-rose-400 hidden"></p>
                     {% if form.message.errors %}
                     <p class="mt-1 text-xs text-rose-400">{{ form.message.errors.0 }}</p>
                     {% endif %}
@@ -804,10 +836,16 @@
                 {{ form.website }}
 
                 <div class="pt-2">
-                    <button type="submit"
-                        class="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-sky-500 text-slate-950 text-sm font-semibold hover:bg-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.4)] transition-all">
-                        Kirim Pesan
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <button type="submit" id="contact-submit-btn"
+                        class="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-full bg-sky-500 text-slate-950 text-sm font-semibold hover:bg-sky-400 hover:shadow-[0_0_20px_rgba(56,189,248,0.4)] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer">
+                        <span id="submit-spinner" class="hidden">
+                            <svg class="w-4 h-4 animate-spin text-slate-950" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                        </span>
+                        <span id="submit-text">Kirim Pesan</span>
+                        <svg id="submit-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
                     </button>
@@ -893,5 +931,148 @@
             }
         });
     }
+
+    // =========================================================================
+    // MODERN ASYNC CONTACT FORM CONTROLLER (6 UI States Matrix)
+    // =========================================================================
+    (function initContactForm() {
+        const form = document.getElementById('contact-form');
+        if (!form) return;
+
+        const submitBtn = document.getElementById('contact-submit-btn');
+        const submitText = document.getElementById('submit-text');
+        const submitIcon = document.getElementById('submit-icon');
+        const submitSpinner = document.getElementById('submit-spinner');
+        const alertBox = document.getElementById('contact-alert');
+        const successState = document.getElementById('contact-success-state');
+        const successMsg = document.getElementById('contact-success-msg');
+        const resetBtn = document.getElementById('contact-reset-btn');
+
+        function clearErrors() {
+            ['name', 'email', 'subject', 'message'].forEach(field => {
+                const el = document.getElementById(`err-${field}`);
+                if (el) {
+                    el.textContent = '';
+                    el.classList.add('hidden');
+                }
+            });
+            if (alertBox) {
+                alertBox.className = 'hidden mb-5 rounded-xl p-4 text-xs md:text-sm transition-all';
+                alertBox.textContent = '';
+            }
+        }
+
+        function showAlert(message, type = 'error') {
+            if (!alertBox) return;
+            alertBox.classList.remove('hidden');
+            if (type === 'error') {
+                alertBox.className = 'mb-5 rounded-xl p-4 text-xs md:text-sm bg-rose-950/60 border border-rose-500/40 text-rose-200 transition-all';
+            } else {
+                alertBox.className = 'mb-5 rounded-xl p-4 text-xs md:text-sm bg-emerald-950/60 border border-emerald-500/40 text-emerald-200 transition-all';
+            }
+            alertBox.textContent = message;
+        }
+
+        function setLoading(isLoading) {
+            if (!submitBtn) return;
+            submitBtn.disabled = isLoading;
+            if (isLoading) {
+                submitSpinner?.classList.remove('hidden');
+                submitSpinner?.classList.add('inline-flex');
+                submitIcon?.classList.add('hidden');
+                if (submitText) submitText.textContent = 'Mengirim Pesan...';
+            } else {
+                submitSpinner?.classList.add('hidden');
+                submitSpinner?.classList.remove('inline-flex');
+                submitIcon?.classList.remove('hidden');
+                if (submitText) submitText.textContent = 'Kirim Pesan';
+            }
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            clearErrors();
+
+            // Client-side quick check
+            const nameVal = form.querySelector('[name="name"]')?.value.trim();
+            const emailVal = form.querySelector('[name="email"]')?.value.trim();
+            const msgVal = form.querySelector('[name="message"]')?.value.trim();
+
+            let hasClientErr = false;
+            if (!nameVal) {
+                const err = document.getElementById('err-name');
+                if (err) { err.textContent = 'Nama lengkap wajib diisi.'; err.classList.remove('hidden'); }
+                hasClientErr = true;
+            }
+            if (!emailVal || !emailVal.includes('@')) {
+                const err = document.getElementById('err-email');
+                if (err) { err.textContent = 'Alamat email valid wajib diisi.'; err.classList.remove('hidden'); }
+                hasClientErr = true;
+            }
+            if (!msgVal) {
+                const err = document.getElementById('err-message');
+                if (err) { err.textContent = 'Pesan Anda tidak boleh kosong.'; err.classList.remove('hidden'); }
+                hasClientErr = true;
+            }
+
+            if (hasClientErr) {
+                showAlert('Silakan lengkapi bidang bertanda bintang sebelum mengirimkan pesan.');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                const formData = new FormData(form);
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                const data = await response.json().catch(() => null);
+
+                if (response.ok && data && data.success) {
+                    // Transition to Craftsman Success State View
+                    form.classList.add('hidden');
+                    if (successState) {
+                        if (data.message && successMsg) {
+                            successMsg.textContent = data.message;
+                        }
+                        successState.classList.remove('hidden');
+                        successState.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }
+                    form.reset();
+                } else if (data && data.errors) {
+                    // Show field errors
+                    Object.entries(data.errors).forEach(([field, errMsgs]) => {
+                        const errEl = document.getElementById(`err-${field}`);
+                        if (errEl && Array.isArray(errMsgs) && errMsgs.length > 0) {
+                            errEl.textContent = errMsgs[0];
+                            errEl.classList.remove('hidden');
+                        }
+                    });
+                    showAlert(data.message || 'Mohon periksa input formulir Anda.');
+                } else {
+                    showAlert('Terjadi kendala saat mengirim pesan. Silakan coba kembali atau hubungi via kontak langsung.');
+                }
+            } catch (networkErr) {
+                showAlert('Koneksi jaringan terputus. Silakan periksa koneksi Anda dan coba kembali.');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Reset button handler: return to Ideal State
+        resetBtn?.addEventListener('click', function() {
+            successState?.classList.add('hidden');
+            form.classList.remove('hidden');
+            clearErrors();
+            setLoading(false);
+        });
+    })();
 </script>
 {% endblock %}

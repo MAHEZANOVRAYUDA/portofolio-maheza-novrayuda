@@ -1,17 +1,2 @@
 {% extends "home.html" %}
-
-{% block extra_head %}
-{{ block.super }}
-<script>
-    // Smooth scroll to contact section on direct navigation
-    window.addEventListener('DOMContentLoaded', function() {
-        setTimeout(function() {
-            const contactSection = document.getElementById('contact');
-            if (contactSection) {
-                contactSection.scrollIntoView({ behavior: 'smooth' });
-                history.replaceState(null, '', '/#contact');
-            }
-        }, 100);
-    });
-</script>
-{% endblock %}
+{# Direct /contact/ route extends unified single-page layout; smooth scrolling is managed universally by base.html #}

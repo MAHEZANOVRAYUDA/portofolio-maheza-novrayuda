@@ -121,6 +121,7 @@ class ContactView(FormView):
     def form_valid(self, form):
         from django.core.mail import send_mail
         from django.conf import settings
+        from django.http import JsonResponse
 
         obj = form.save()
 
@@ -133,8 +134,34 @@ class ContactView(FormView):
             fail_silently=True,
         )
 
+        is_ajax = (
+            self.request.headers.get('x-requested-with') == 'XMLHttpRequest' or
+            'application/json' in self.request.headers.get('accept', '')
+        )
+        if is_ajax:
+            return JsonResponse({
+                'success': True,
+                'message': 'Terima kasih! Pesan Anda sudah berhasil terkirim. Saya akan segera merespons secepatnya.'
+            })
+
         messages.success(self.request, 'Terima kasih! Pesan Anda sudah berhasil terkirim.')
         return super().form_valid(form)
+
+    def form_invalid(self, form):
+        from django.http import JsonResponse
+
+        is_ajax = (
+            self.request.headers.get('x-requested-with') == 'XMLHttpRequest' or
+            'application/json' in self.request.headers.get('accept', '')
+        )
+        if is_ajax:
+            return JsonResponse({
+                'success': False,
+                'message': 'Mohon periksa kembali kolom formulir yang belum sesuai.',
+                'errors': {k: [str(err) for err in v] for k, v in form.errors.items()}
+            }, status=400)
+
+        return super().form_invalid(form)
 
 
 @method_decorator(cache_control(public=True, max_age=3600), name='dispatch')

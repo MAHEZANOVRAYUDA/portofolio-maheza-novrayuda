@@ -47,6 +47,39 @@ class ContactFormTest(TestCase):
         self.assertEqual(ContactMessage.objects.count(), 0)
         self.assertFormError(response.context['form'], 'website', 'Spam terdeteksi!')
 
+    def test_contact_form_ajax_valid(self):
+        data = {
+            'name': 'Budi Santoso',
+            'email': 'budi@example.com',
+            'subject': 'Kolaborasi AI',
+            'message': 'Prospek kerjasama data pipeline'
+        }
+        response = self.client.post(
+            reverse('portfolio:contact'),
+            data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertEqual(response.status_code, 200)
+        res_json = response.json()
+        self.assertTrue(res_json.get('success'))
+        self.assertIn('berhasil terkirim', res_json.get('message', ''))
+
+    def test_contact_form_ajax_invalid(self):
+        data = {
+            'name': '',
+            'email': 'not-an-email',
+            'message': ''
+        }
+        response = self.client.post(
+            reverse('portfolio:contact'),
+            data,
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest'
+        )
+        self.assertEqual(response.status_code, 400)
+        res_json = response.json()
+        self.assertFalse(res_json.get('success'))
+        self.assertIn('errors', res_json)
+
 class ExperienceViewIntegrationTest(TestCase):
     def setUp(self):
         from portfolio.models import Experience
