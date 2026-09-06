@@ -8,16 +8,16 @@
 <article class="max-w-4xl mx-auto">
     <!-- Breadcrumb -->
     <div class="mb-8" data-aos="fade-up">
-        <nav class="flex items-center gap-2 text-xs text-slate-500 mb-6">
-            <a href="{% url 'portfolio:home' %}" class="hover:text-sky-400 transition-colors">Home</a>
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <nav class="flex items-center gap-2 text-xs text-slate-400 mb-6" aria-label="Breadcrumb">
+            <a href="/#home" class="hover:text-sky-400 transition-colors">Home</a>
+            <svg class="w-3 h-3 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <a href="{% url 'portfolio:projects' %}" class="hover:text-sky-400 transition-colors">Projects</a>
-            <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <a href="/#projects" class="hover:text-sky-400 transition-colors">Projects</a>
+            <svg class="w-3 h-3 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <span class="text-slate-300 truncate max-w-[200px]">{{ project.title }}</span>
+            <span class="text-slate-200 truncate max-w-[240px] font-medium">{{ project.title }}</span>
         </nav>
 
         <h1
@@ -51,8 +51,8 @@
     <!-- Project Image -->
     <div class="relative aspect-video w-full rounded-2xl overflow-hidden glass shadow-2xl mb-12 border border-white/10 group"
         data-aos="fade-up" data-aos-delay="100">
-        {% if project.image %}
-        <img src="{{ project.image.url }}" alt="{{ project.title }}" loading="lazy"
+        {% if project.preview_image_url %}
+        <img src="{{ project.preview_image_url }}" alt="{{ project.title }}" loading="lazy"
             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         {% else %}
         <div class="w-full h-full bg-slate-800 flex items-center justify-center text-slate-500">No Image Available</div>

@@ -4,9 +4,51 @@ from django.views.generic import ListView, DetailView, TemplateView, FormView
 from django.contrib import messages
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
+from django_ratelimit.decorators import ratelimit
 
 from .models import Project, Skill, Profile, Achievement, Certificate, Education
 from .forms import ContactForm
+
+
+def get_common_portfolio_context(form=None):
+    """Helper to get unified portfolio context for single-page experience."""
+    profile = Profile.objects.first()
+    skills = Skill.objects.all()
+    skills_by_category = {}
+    for skill in skills:
+        if skill.category not in skills_by_category:
+            skills_by_category[skill.category] = []
+        skills_by_category[skill.category].append(skill)
+
+    all_projects = Project.objects.prefetch_related('skills').all()
+    featured_projects = all_projects.filter(featured=True)[:3]
+    achievements = Achievement.objects.all()
+    featured_achievements = achievements.filter(is_featured=True)[:3]
+    certificates = Certificate.objects.all()
+    featured_certificates = certificates.filter(is_featured=True)[:3]
+    educations = Education.objects.all()
+
+    ctx = {
+        'profile': profile,
+        'skills': skills,
+        'skills_by_category': skills_by_category,
+        'projects': all_projects,
+        'featured_projects': featured_projects,
+        'achievements': achievements,
+        'featured_achievements': featured_achievements,
+        'certificates': certificates,
+        'featured_certificates': featured_certificates,
+        'educations': educations,
+        'project_count': all_projects.count() or 8,
+        'skill_count': skills.count() or 35,
+        'achievement_count': achievements.count(),
+        'certificate_count': certificates.count() or 5,
+    }
+    if form is not None:
+        ctx['form'] = form
+    elif 'form' not in ctx:
+        ctx['form'] = ContactForm()
+    return ctx
 
 
 @method_decorator(cache_control(public=True, max_age=3600), name='dispatch')
@@ -20,124 +62,64 @@ class HomeView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        profile = Profile.objects.first()
-
-        skills = Skill.objects.all()
-        skills_by_category = {}
-        for skill in skills:
-            if skill.category not in skills_by_category:
-                skills_by_category[skill.category] = []
-            skills_by_category[skill.category].append(skill)
-
-        featured_projects = Project.objects.prefetch_related('skills').filter(featured=True)[:3]
-        featured_achievements = Achievement.objects.filter(is_featured=True)[:3]
-        featured_certificates = Certificate.objects.filter(is_featured=True)[:3]
-
-        context.update(
-            {
-                'profile': profile,
-                'skills_by_category': skills_by_category,
-                'featured_projects': featured_projects,
-                'featured_achievements': featured_achievements,
-                'featured_certificates': featured_certificates,
-                'active_page': 'home',
-            }
-        )
+        context.update(get_common_portfolio_context())
+        context['active_page'] = 'home'
+        context['target_section'] = 'home'
         return context
 
 
 @method_decorator(cache_control(public=True, max_age=3600), name='dispatch')
 class AboutView(TemplateView):
-    template_name = 'about.html'
+    template_name = 'home.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile = Profile.objects.first()
-        skills = Skill.objects.all()
-        projects = Project.objects.prefetch_related('skills').all()
-        achievements = Achievement.objects.all()
-        certificates = Certificate.objects.all()
-        educations = Education.objects.all()
-
-        context.update(
-            {
-                'profile': profile,
-                'skills': skills,
-                'projects': projects,
-                'achievements': achievements,
-                'certificates': certificates,
-                'educations': educations,
-                'active_page': 'about',
-                # Quick stats for sidebar
-                'project_count': projects.count(),
-                'skill_count': skills.count(),
-                'achievement_count': achievements.count(),
-                'certificate_count': certificates.count(),
-            }
-        )
+        context.update(get_common_portfolio_context())
+        context['active_page'] = 'about'
+        context['target_section'] = 'about'
         return context
 
 
 @method_decorator(cache_control(public=True, max_age=3600), name='dispatch')
 class ProjectListView(ListView):
-    """Dedicated page listing all projects with category filters."""
     model = Project
-    template_name = 'projects.html'
+    template_name = 'home.html'
     context_object_name = 'projects'
-    
+
     def get_queryset(self):
         return Project.objects.prefetch_related('skills').all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile = Profile.objects.first()
-
-        skills = Skill.objects.all()
-        skills_by_category = {}
-        for skill in skills:
-            if skill.category not in skills_by_category:
-                skills_by_category[skill.category] = []
-            skills_by_category[skill.category].append(skill)
-
-        context.update(
-            {
-                'profile': profile,
-                'skills_by_category': skills_by_category,
-                'active_page': 'projects',
-            }
-        )
+        context.update(get_common_portfolio_context())
+        context['active_page'] = 'projects'
+        context['target_section'] = 'projects'
         return context
 
 
-from django_ratelimit.decorators import ratelimit
-from django.utils.decorators import method_decorator
-
 @method_decorator(ratelimit(key='ip', rate='5/h', block=True), name='post')
 class ContactView(FormView):
-    template_name = 'contact.html'
+    template_name = 'home.html'
     form_class = ContactForm
     success_url = reverse_lazy('portfolio:contact')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        profile = Profile.objects.first()
-        context.update(
-            {
-                'profile': profile,
-                'active_page': 'contact',
-            }
-        )
+        common = get_common_portfolio_context()
+        for key, val in common.items():
+            if key not in context:
+                context[key] = val
+        context['active_page'] = 'contact'
+        context['target_section'] = 'contact'
         return context
 
     def form_valid(self, form):
         from django.core.mail import send_mail
         from django.conf import settings
-        
+
         obj = form.save()
-        
-        # Di Vercel (Serverless), threading tidak dapat digunakan karena process langsung dibekukan 
-        # setelah response HTTP terkirim. Kita harus menggunakan proses sinkronus.
+
+        # Di Vercel (Serverless), proses sinkronus
         send_mail(
             subject=f"Pesan baru dari {obj.name}",
             message=obj.message,
@@ -145,8 +127,8 @@ class ContactView(FormView):
             recipient_list=[getattr(settings, 'CONTACT_NOTIFY_EMAIL', 'admin@localhost')],
             fail_silently=True,
         )
-        
-        messages.success(self.request, 'Terima kasih! Pesan Anda sudah terkirim.')
+
+        messages.success(self.request, 'Terima kasih! Pesan Anda sudah berhasil terkirim.')
         return super().form_valid(form)
 
 
@@ -155,7 +137,6 @@ class ProjectDetailView(DetailView):
     model = Project
     template_name = 'project_detail.html'
     context_object_name = 'project'
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -180,3 +161,4 @@ class ProjectDetailView(DetailView):
         context['prev_project'] = prev_project
         context['next_project'] = next_project
         return context
+

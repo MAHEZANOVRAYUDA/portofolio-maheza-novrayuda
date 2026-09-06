@@ -56,6 +56,19 @@ class Project(models.Model):
         validators=[FileExtensionValidator(['pdf', 'doc', 'docx'])]
     )
 
+    @property
+    def preview_image_url(self):
+        if self.image:
+            return self.image.url
+        # If no image uploaded, use GitHub OpenGraph repository card
+        if self.github_link and 'github.com/' in self.github_link:
+            cleaned = self.github_link.split('github.com/')[-1].strip('/').split('/')
+            if len(cleaned) >= 2:
+                owner, repo = cleaned[0], cleaned[1]
+                repo = repo.split('.')[0]
+                return f"https://opengraph.githubassets.com/1/{owner}/{repo}"
+        return f"https://opengraph.githubassets.com/1/MAHEZANOVRAYUDA/{self.slug or 'project'}"
+
     class Meta:
         ordering = ['-created_at']
 
@@ -107,6 +120,28 @@ class Profile(models.Model):
         help_text='Jika ada personal domain lain.',
     )
     resume_link = models.URLField(blank=True, null=True)
+
+    @property
+    def avatar_optimized_url(self):
+        if self.avatar:
+            url = self.avatar.url
+            if 'cloudinary.com' in url and '/upload/' in url:
+                # Cloudinary auto face crop, 400x400 sharp retina, auto quality and format
+                return url.replace('/upload/', '/upload/c_fill,w_400,h_400,g_face,q_auto,f_auto/')
+            return url
+        if self.github_url and 'github.com/' in self.github_url:
+            username = self.github_url.rstrip('/').split('/')[-1]
+            return f"https://github.com/{username}.png?size=400"
+        return "https://github.com/MAHEZANOVRAYUDA.png?size=400"
+
+    @property
+    def avatar_thumb_url(self):
+        if self.avatar:
+            url = self.avatar.url
+            if 'cloudinary.com' in url and '/upload/' in url:
+                return url.replace('/upload/', '/upload/c_fill,w_120,h_120,g_face,q_auto,f_auto/')
+            return url
+        return self.avatar_optimized_url
 
     class Meta:
         verbose_name = 'Profile'

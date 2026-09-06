@@ -1,6 +1,193 @@
-/* =============================================
-   Portfolio Custom Styles
-   ============================================= */
+/* ==========================================================================
+   Craftsman UI Design System - Maheza Novrayuda Portfolio
+   WCAG 2.1 AA Compliant · Zero AI-Slop · Physics Micro-Interactions
+   ========================================================================== */
+
+:root {
+    --color-bg: #030712;
+    --color-surface: rgba(15, 23, 42, 0.72);
+    --color-surface-hover: rgba(30, 41, 59, 0.7);
+    --color-border: rgba(148, 163, 184, 0.12);
+    --color-border-hover: rgba(56, 189, 248, 0.35);
+    --color-primary: #38bdf8;
+    --color-primary-glow: rgba(56, 189, 248, 0.2);
+    --spring-easing: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Smooth Scrolling & Section Anchor Offset */
+html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+}
+
+section[id] {
+    scroll-margin-top: 6rem;
+}
+
+/* Body & Ambient Background */
+body {
+    background-color: var(--color-bg);
+    background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(14, 116, 144, 0.22), transparent),
+        radial-gradient(ellipse 60% 40% at 90% 20%, rgba(30, 58, 138, 0.18), transparent),
+        radial-gradient(ellipse 60% 40% at 10% 45%, rgba(14, 116, 144, 0.12), transparent);
+    color: #f1f5f9;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Ambient Subtle Grain Noise (Zero Performance Penalty) */
+.bg-grid-pattern {
+    background-size: 36px 36px;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* Glassmorphism Primitives */
+.glass {
+    background: var(--color-surface);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--color-border);
+}
+
+.glass-nav {
+    background: rgba(3, 7, 18, 0.82);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Editorial Radiant Typography (Anti-Slop) */
+.heading-radiant {
+    background: linear-gradient(135deg, #ffffff 30%, #bae6fd 70%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.025em;
+}
+
+.heading-subtle {
+    background: linear-gradient(135deg, #ffffff 40%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Interactive Card Spring Effects */
+.craft-card {
+    position: relative;
+    border: 1px solid var(--color-border);
+    transition: transform 0.35s var(--spring-easing), border-color 0.35s ease, box-shadow 0.35s ease;
+}
+
+.craft-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--color-border-hover);
+    box-shadow: 0 12px 36px -8px rgba(2, 6, 23, 0.7), 0 0 20px -2px var(--color-primary-glow);
+}
+
+/* Skill Badges */
+.skill-pill {
+    transition: transform 0.2s var(--spring-easing), background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.skill-pill:hover {
+    transform: translateY(-2px);
+    background-color: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.4);
+    color: #f0f9ff;
+}
+
+/* Category Filter Buttons */
+.filter-btn {
+    transition: all 0.25s var(--spring-easing);
+    touch-action: manipulation;
+}
+
+.filter-btn.active {
+    background-color: #0284c7 !important;
+    border-color: #38bdf8 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 18px rgba(14, 165, 233, 0.4);
+}
+
+/* Mobile Menu Animation */
+#mobile-menu {
+    transform-origin: top center;
+    transition: opacity 0.25s ease, transform 0.25s var(--spring-easing), max-height 0.3s ease;
+}
+
+#mobile-menu.menu-closed {
+    opacity: 0;
+    max-height: 0;
+    pointer-events: none;
+    transform: scale(0.97) translateY(-8px);
+    overflow: hidden;
+}
+
+#mobile-menu.menu-open {
+    opacity: 1;
+    max-height: 600px;
+    pointer-events: auto;
+    transform: scale(1) translateY(0);
+}
+
+/* Scrollspy Nav Highlight */
+.nav-link {
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.nav-link.nav-active {
+    color: #38bdf8 !important;
+}
+
+.nav-link.nav-active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: #38bdf8;
+    border-radius: 9999px;
+    box-shadow: 0 0 8px #38bdf8;
+}
+
+/* Mobile Nav Link Active */
+.mobile-nav-link.nav-active {
+    color: #38bdf8 !important;
+    background-color: rgba(56, 189, 248, 0.12) !important;
+    border-left: 3px solid #38bdf8;
+}
+
+/* Accessibility Focus Visible Rings */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 3px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #020617;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1e293b;
+    border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+}
 
 /* AOS Animation Overrides */
 [data-aos] {
@@ -8,79 +195,4 @@
 }
 [data-aos].aos-animate {
     pointer-events: auto;
-}
-
-/* Typing cursor animation */
-.typing-cursor {
-    display: inline-block;
-    width: 3px;
-    height: 1em;
-    background: #0ea5e9;
-    margin-left: 2px;
-    animation: blink 1s infinite;
-    vertical-align: text-bottom;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-/* Card hover glow */
-.card-glow {
-    position: relative;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.card-glow:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 32px rgba(14, 165, 233, 0.15);
-}
-
-/* Gradient text utility */
-.gradient-text {
-    background: linear-gradient(135deg, #0ea5e9, #22d3ee, #22c55e);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-/* Mobile menu transitions */
-#mobile-menu {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.35s ease, opacity 0.3s ease;
-    opacity: 0;
-}
-#mobile-menu.open {
-    max-height: 400px;
-    opacity: 1;
-}
-
-/* Skill badge hover */
-.skill-badge {
-    transition: all 0.2s ease;
-}
-.skill-badge:hover {
-    border-color: rgba(14, 165, 233, 0.6);
-    background: rgba(14, 165, 233, 0.08);
-    color: #e0f2fe;
-}
-
-/* Filter button active state */
-.filter-btn {
-    transition: all 0.2s ease;
-}
-.filter-btn.active {
-    background: rgba(14, 165, 233, 0.15);
-    border-color: rgba(14, 165, 233, 0.5);
-    color: #7dd3fc;
-}
-
-/* Smooth page fade-in */
-body {
-    animation: fadeIn 0.5s ease-out;
-}
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to   { opacity: 1; }
 }

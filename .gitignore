@@ -28,3 +28,7 @@ node_modules/
 .idea/
 .vscode/
 *.swp
+
+# Graphify Local Cache
+graphify-out/.graphify_*
+graphify-out/cache/
