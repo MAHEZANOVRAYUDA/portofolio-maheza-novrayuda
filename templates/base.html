@@ -7,10 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{{ profile.name|default:'Maheza Novrayuda' }} — AI & Data Engineer{% endblock %}</title>
     <meta name="description"
-        content="{% block meta_description %}Portofolio profesional Maheza Novrayuda, mahasiswa Teknik Informatika berfokus pada Data Engineering, Machine Learning, dan arsitektur Generative AI (RAG).{% endblock %}">
+        content="{% block meta_description %}Portofolio profesional Maheza Novrayuda, Research Assistant di LPPM UPI YPTK Padang berfokus pada Data Engineering, Machine Learning, Computer Vision, dan arsitektur AI Terapan.{% endblock %}">
     <meta name="author" content="{{ profile.name|default:'Maheza Novrayuda' }}">
-    <meta name="robots" content="index, follow">
+    <meta name="keywords" content="Maheza Novrayuda, Maheza, AI Engineer, Data Engineer, Research Assistant, LPPM UPI YPTK Padang, Machine Learning, Computer Vision, IoT, Python, Portfolio">
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
     <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    
+    <!-- Google Search Console Verification Slot -->
+    {% block google_verification %}{% endblock %}
     
     <!-- Favicons & Brand Assets -->
     <link rel="icon" type="image/svg+xml" href="{% static 'favicon.svg' %}">
@@ -22,12 +26,16 @@
     <meta name="theme-color" content="#020617">
 
     <!-- Open Graph & Twitter -->
-    <meta property="og:title" content="{% block og_title %}{{ profile.name|default:'Maheza Novrayuda' }} — AI & Data Engineering Portfolio{% endblock %}">
-    <meta property="og:description" content="{% block og_description %}Portofolio profesional Maheza Novrayuda. Eksplorasi project machine learning, pipeline data, dan arsitektur RAG.{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}{{ profile.name|default:'Maheza Novrayuda' }} — AI & Data Engineer Portfolio{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}Portofolio profesional Maheza Novrayuda, Research Assistant LPPM UPI YPTK Padang. Eksplorasi project machine learning, data engineering, dan arsitektur AI.{% endblock %}">
     <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Maheza Novrayuda Portfolio">
     <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
-    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-cover.png' %}">
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'android-chrome-512x512.png' %}">
     <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ profile.name|default:'Maheza Novrayuda' }} — AI & Data Engineer Portfolio">
+    <meta name="twitter:description" content="Portofolio resmi Maheza Novrayuda. Research Assistant di LPPM UPI YPTK Padang.">
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{% static 'android-chrome-512x512.png' %}">
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,22 +51,56 @@
     <!-- Custom Craftsman CSS -->
     <link rel="stylesheet" href="{% static 'css/custom.css' %}">
 
-    <!-- JSON-LD SEO Schema -->
+    <!-- JSON-LD SEO Schema (Google Knowledge Graph Alignment) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "Person",
-      "name": "{{ profile.name|default:'Maheza Novrayuda' }}",
-      "url": "{{ request.scheme }}://{{ request.get_host }}",
-      "jobTitle": "{{ profile.hero_title|default:'AI & Data Engineer' }}",
-      "worksFor": {
-        "@type": "CollegeOrUniversity",
-        "name": "Universitas Putra Indonesia YPTK Padang"
-      },
-      "sameAs": [
-        "{% if profile and profile.github_url %}{{ profile.github_url }}{% endif %}",
-        "{% if profile and profile.linkedin_url %}{{ profile.linkedin_url }}{% endif %}",
-        "{% if profile and profile.instagram_url %}{{ profile.instagram_url }}{% endif %}"
+      "@graph": [
+        {
+          "@type": "Person",
+          "@id": "{{ request.scheme }}://{{ request.get_host }}/#person",
+          "name": "{{ profile.name|default:'Maheza Novrayuda' }}",
+          "alternateName": ["Maheza", "Novrayuda"],
+          "url": "{{ request.scheme }}://{{ request.get_host }}",
+          "image": "{% if profile and profile.avatar %}{{ profile.avatar.url }}{% else %}{{ request.scheme }}://{{ request.get_host }}{% static 'android-chrome-512x512.png' %}{% endif %}",
+          "jobTitle": "{{ profile.hero_title|default:'Research Assistant & AI / Data Engineer' }}",
+          "worksFor": {
+            "@type": "Organization",
+            "name": "LPPM Universitas Putra Indonesia YPTK Padang",
+            "url": "https://upiyptk.ac.id"
+          },
+          "alumniOf": {
+            "@type": "CollegeOrUniversity",
+            "name": "Universitas Putra Indonesia YPTK Padang"
+          },
+          "knowsAbout": [
+            "Software Engineering",
+            "Artificial Intelligence",
+            "Machine Learning",
+            "Data Engineering",
+            "Computer Vision",
+            "Internet of Things",
+            "Python",
+            "Django",
+            "PostgreSQL"
+          ],
+          "sameAs": [
+            {% if profile and profile.github_url %}"{{ profile.github_url }}"{% endif %}{% if profile and profile.linkedin_url %},
+            "{{ profile.linkedin_url }}"{% endif %}{% if profile and profile.instagram_url %},
+            "{{ profile.instagram_url }}"{% endif %}
+          ]
+        },
+        {
+          "@type": "WebSite",
+          "@id": "{{ request.scheme }}://{{ request.get_host }}/#website",
+          "url": "{{ request.scheme }}://{{ request.get_host }}",
+          "name": "Maheza Novrayuda — Portfolio",
+          "description": "Portofolio profesional Maheza Novrayuda, Research Assistant di LPPM UPI YPTK Padang & AI / Data Engineer.",
+          "publisher": {
+            "@id": "{{ request.scheme }}://{{ request.get_host }}/#person"
+          },
+          "inLanguage": "id-ID"
+        }
       ]
     }
     </script>
