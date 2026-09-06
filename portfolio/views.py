@@ -6,7 +6,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_control
 from django_ratelimit.decorators import ratelimit
 
-from .models import Project, Skill, Profile, Achievement, Certificate, Education
+from .models import Project, Skill, Profile, Achievement, Certificate, Education, Experience
 from .forms import ContactForm
 
 
@@ -27,6 +27,8 @@ def get_common_portfolio_context(form=None):
     certificates = Certificate.objects.all()
     featured_certificates = certificates.filter(is_featured=True)[:3]
     educations = Education.objects.all()
+    experiences = Experience.objects.prefetch_related('skills').all().order_by('ordering', '-start_date')
+    featured_experiences = experiences.filter(is_featured=True)
 
     ctx = {
         'profile': profile,
@@ -39,10 +41,13 @@ def get_common_portfolio_context(form=None):
         'certificates': certificates,
         'featured_certificates': featured_certificates,
         'educations': educations,
+        'experiences': experiences,
+        'featured_experiences': featured_experiences,
         'project_count': all_projects.count() or 15,
         'skill_count': skills.count() or 35,
         'achievement_count': achievements.count() or 3,
         'certificate_count': certificates.count() or 5,
+        'experience_count': experiences.count() or 8,
     }
     if form is not None:
         ctx['form'] = form

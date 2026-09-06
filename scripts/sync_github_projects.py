@@ -20,54 +20,52 @@ def sync():
         profile = Profile(name="Maheza Novrayuda")
     
     profile.name = "Maheza Novrayuda"
-    profile.hero_title = "AI & Data Engineering Enthusiast"
+    profile.hero_title = "Research Assistant & AI / Data Engineer"
     profile.location = "Padang, Sumatera Barat, Indonesia"
     profile.github_url = "https://github.com/MAHEZANOVRAYUDA"
     profile.linkedin_url = "https://www.linkedin.com/in/mahezanovrayuda"
     profile.bio = (
-        "Mahasiswa Teknik Informatika di Universitas Putra Indonesia YPTK Padang dan mantan Data Scientist "
-        "Virtual Intern di ID/X Partners. Berfokus membangun solusi data end-to-end — mulai dari arsitektur "
-        "Data Pipeline (ETL, Airflow, SQL), pemodelan Machine Learning (Credit Risk Scoring, XGBoost), arsitektur "
-        "Computer Vision (YOLOv8), hingga integrasi Generative AI berbasis RAG."
+        "Research Assistant di LPPM Universitas Putra Indonesia YPTK Padang dengan fokus pada Software Engineering, "
+        "AI/ML, Computer Vision, dan IoT. Berpengalaman dalam penguatan keamanan infrastruktur data center (Diskominfo Padang), "
+        "pemodelan Credit Risk Scoring skala 466k+ record (ID/X Partners), serta akselerasi talenta AI di Digistar Club dan Indigo Telkom."
     )
     profile.about_long = (
-        "Perjalanan saya di dunia teknologi berakar pada ketertarikan kuat terhadap bagaimana data mentah dapat "
-        "ditransformasikan menjadi kecerdasan komputasi yang memberikan dampak nyata. Sebagai mahasiswa Teknik Informatika "
-        "di Universitas Putra Indonesia YPTK Padang, saya memadukan fondasi ilmu komputer akademis dengan praktik industri "
-        "yang intensif.\n\n"
-        "Pengalaman berharga saya jalani sebagai Data Scientist Virtual Intern di ID/X Partners, di mana saya bertanggung "
-        "jawab melakukan pemodelan risiko kredit (Credit Risk Assessment & Scorecard). Dalam proyek tersebut, saya menerapkan "
-        "data cleaning menyeluruh, feature engineering berbasis Weight of Evidence (WoE) & Information Value (IV), serta "
-        "melatih model prediktif (Logistic Regression, Random Forest, LightGBM) dengan evaluasi metrik AUC-ROC teroptimasi.\n\n"
-        "Bagi saya, model AI terbaik bertumpu pada arsitektur data yang kokoh. Oleh karena itu, saya menguasai seluruh spektrum: "
-        "Data Engineering (Airflow, PostgreSQL, Docker), Machine Learning & Deep Learning (Scikit-Learn, TensorFlow, YOLOv8), "
-        "hingga Generative AI & Retrieval-Augmented Generation (RAG). Setiap proyek saya rancang dengan standar rekayasa bersih, "
-        "reproducible, dan siap pakai di lingkungan produksi."
+        "Saya adalah seorang pembelajar berkelanjutan dan praktisi rekayasa perangkat lunak serta AI/Data yang berbasis di Padang, Sumatera Barat. "
+        "Saat ini, saya mengemban amanah sebagai Research Assistant di Lembaga Penelitian dan Pengabdian Masyarakat (LPPM) UPI YPTK Padang, "
+        "di mana saya memimpin riset terapan dan implementasi sistem di bidang Software Engineering, Artificial Intelligence / Machine Learning (AI/ML), "
+        "Computer Vision, serta integrasi sensor Internet of Things (IoT).\n\n"
+        "Sebelumnya, saya telah menyelesaikan program magang intensif di Pusat Komputasi & Data Center Dinas Komunikasi dan Informatika (Diskominfo Padang), "
+        "melakukan analisis forensik terhadap 450.000+ log autentikasi SSH dan 213.000+ web traffic Nginx untuk mitigasi botnet dan cyber threat. "
+        "Pada ranah data science industri, saya mengembangkan Credit Scoring Engine skala 466k+ catatan pinjaman sebagai Project-Based Virtual Intern di ID/X Partners x Rakamin Academy, "
+        "meraih akurasi 97.86% dan AUC 97.35% dengan model Gradient Boosting.\n\n"
+        "Komitmen saya adalah membangun solusi cerdas dengan prinsip Data-First Architecture, metrik evaluasi yang dapat dipertanggungjawabkan, "
+        "serta kode yang modular, aman, dan siap pakai di lingkungan produksi."
     )
     profile.save()
     print("Profile updated successfully.")
 
     print("\n=== SYNCHRONIZING ACHIEVEMENTS ===")
+    Achievement.objects.filter(title__icontains="astronomi").delete()
     achievements_data = [
         {
-            "title": "Data Scientist Virtual Internship",
-            "organization": "ID/X Partners x Rakamin Academy",
+            "title": "Data Center Infrastructure & Forensic Security Audit",
+            "organization": "Dinas Komunikasi dan Informatika (Diskominfo Padang)",
             "kind": Achievement.Kind.PROJECT,
-            "date": date(2026, 5, 15),
-            "highlight": "Credit Risk Scoring & AUC-ROC Optimization",
-            "description": "Menyelesaikan tugas akhir pemodelan risiko kredit end-to-end pada dataset keuangan historis 2007-2014, feature engineering WoE/IV, dan deployment dashboard Streamlit interaktif.",
-            "link": "https://github.com/MAHEZANOVRAYUDA/credit-risk-analysis",
+            "date": date(2026, 6, 25),
+            "highlight": "450k+ Log Forensics & 75 Controls Security Audit",
+            "description": "Analisis forensik log autentikasi SSH 450k+ entri dan 213k+ traffic Nginx, memetakan serangan botnet dari 872+ threat actor, serta audit keamanan web aplikasi sentimen.",
+            "link": "https://www.linkedin.com/in/mahezanovrayuda",
             "is_featured": True,
             "ordering": 1
         },
         {
-            "title": "Peserta KSN-K Bidang Astronomi",
-            "organization": "Puspresnas / Kemendikbudristek",
-            "kind": Achievement.Kind.COMPETITION,
-            "date": date(2022, 6, 1),
-            "highlight": "Kompetisi Sains Nasional",
-            "description": "Terpilih sebagai perwakilan sekolah dalam kompetisi sains tingkat kabupaten, menyelesaikan analisis kalkulasi astrofisika dan mekanika orbit.",
-            "link": "",
+            "title": "Data Scientist Virtual Internship",
+            "organization": "ID/X Partners x Rakamin Academy",
+            "kind": Achievement.Kind.PROJECT,
+            "date": date(2026, 3, 31),
+            "highlight": "Credit Risk Scoring & AUC-ROC 97.35%",
+            "description": "Menyelesaikan pemodelan risiko kredit end-to-end pada dataset 466k+ catatan pinjaman, feature engineering WoE/IV, model Gradient Boosting, dan deployment Streamlit interaktif.",
+            "link": "https://github.com/MAHEZANOVRAYUDA/credit-risk-analysis",
             "is_featured": True,
             "ordering": 2
         },

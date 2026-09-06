@@ -246,7 +246,7 @@ class Certificate(models.Model):
 
 class Education(models.Model):
     institution = models.CharField(max_length=200)
-    degree = models.CharField(max_length=200, help_text='Contoh: SMA IPA, Sarjana Komputer')
+    degree = models.CharField(max_length=200, help_text='Contoh: Sarjana Komputer, S1 Teknik Informatika')
     start_date = models.DateField()
     end_date = models.DateField(blank=True, null=True, help_text='Kosongkan jika masih berlangsung.')
     description = models.TextField(blank=True)
@@ -258,4 +258,73 @@ class Education(models.Model):
 
     def __str__(self):
         return f'{self.institution} - {self.degree}'
+
+
+class Experience(models.Model):
+    class EmploymentType(models.TextChoices):
+        RESEARCH = 'Research & Academic', 'Research & Academic'
+        INTERNSHIP = 'Industrial Internship', 'Industrial Internship'
+        APPRENTICESHIP = 'Apprenticeship', 'Apprenticeship / Virtual Intern'
+        ORGANIZATION = 'Organizational Leadership', 'Organizational Leadership'
+        PROGRAM = 'Talent Acceleration', 'Talent Acceleration'
+        BOOTCAMP = 'Bootcamp & Training', 'Bootcamp & Training'
+        OTHER = 'Other', 'Other'
+
+    class LocationType(models.TextChoices):
+        ON_SITE = 'On-site', 'On-site'
+        REMOTE = 'Remote', 'Remote'
+        HYBRID = 'Hybrid', 'Hybrid'
+
+    title = models.CharField(max_length=200, help_text='Contoh: Research Assistant, Data Center Intern')
+    organization = models.CharField(max_length=200, help_text='Contoh: LPPM UPI YPTK Padang, Dinas Komunikasi dan Informatika')
+    employment_type = models.CharField(
+        max_length=50,
+        choices=EmploymentType.choices,
+        default=EmploymentType.INTERNSHIP,
+    )
+    location = models.CharField(max_length=150, blank=True, help_text='Contoh: Padang, Sumatera Barat')
+    location_type = models.CharField(
+        max_length=30,
+        choices=LocationType.choices,
+        default=LocationType.ON_SITE,
+    )
+    start_date = models.DateField()
+    end_date = models.DateField(blank=True, null=True, help_text='Kosongkan jika masih aktif / berlangsung.')
+    is_current = models.BooleanField(default=False, help_text='Centang jika ini adalah posisi aktif Anda saat ini.')
+    description = models.TextField(help_text='Deskripsi ruang lingkup pekerjaan dan tanggung jawab.')
+    highlights = models.TextField(
+        blank=True,
+        help_text='Poin-poin pencapaian atau metrik terukur. Pisahkan setiap poin dengan baris baru.',
+    )
+    skills = models.ManyToManyField(Skill, blank=True, related_name='experiences')
+    technologies_summary = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text='Ringkasan tech stack (misal: "Python, Docker, Kafka, YOLOv8")',
+    )
+    link = models.URLField(blank=True, help_text='Tautan proyek, dokumen pendukung, atau sertifikat terkait.')
+    is_featured = models.BooleanField(default=True, help_text='Tampilkan di sorotan utama portfolio.')
+    ordering = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ['ordering', '-start_date', 'title']
+        verbose_name = 'Experience'
+        verbose_name_plural = 'Experiences'
+
+    def __str__(self):
+        return f'{self.title} - {self.organization}'
+
+    @property
+    def highlights_list(self):
+        if not self.highlights:
+            return []
+        lines = [line.strip().lstrip('-•* ') for line in self.highlights.split('\n')]
+        return [line for line in lines if line]
+
+    @property
+    def formatted_technologies(self):
+        if self.technologies_summary:
+            return [t.strip() for t in self.technologies_summary.split(',') if t.strip()]
+        return [s.name for s in self.skills.all()]
+
 

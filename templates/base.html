@@ -92,6 +92,7 @@
                 <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-slate-300" aria-label="Navigasi Utama">
                     <a href="{% if request.path == '/' %}#home{% else %}/#home{% endif %}" class="nav-link {% if not active_page or active_page == 'home' %}nav-active{% endif %} py-1 hover:text-white" data-section="home">Home</a>
                     <a href="{% if request.path == '/' %}#about{% else %}/#about{% endif %}" class="nav-link {% if active_page == 'about' %}nav-active{% endif %} py-1 hover:text-white" data-section="about">About</a>
+                    <a href="{% if request.path == '/' %}#experience{% else %}/#experience{% endif %}" class="nav-link {% if active_page == 'experience' %}nav-active{% endif %} py-1 hover:text-white" data-section="experience">Experience</a>
                     <a href="{% if request.path == '/' %}#skills{% else %}/#skills{% endif %}" class="nav-link {% if active_page == 'skills' %}nav-active{% endif %} py-1 hover:text-white" data-section="skills">Skills</a>
                     <a href="{% if request.path == '/' %}#certificates{% else %}/#certificates{% endif %}" class="nav-link {% if active_page == 'certificates' %}nav-active{% endif %} py-1 hover:text-white" data-section="certificates">Certificates</a>
                     <a href="{% if request.path == '/' %}#projects{% else %}/#projects{% endif %}" class="nav-link {% if active_page == 'projects' %}nav-active{% endif %} py-1 hover:text-white" data-section="projects">Projects</a>
@@ -131,6 +132,10 @@
                 </a>
                 <a href="{% if request.path == '/' %}#about{% else %}/#about{% endif %}" class="mobile-nav-link {% if active_page == 'about' %}nav-active{% endif %} py-3 px-4 rounded-xl text-slate-200 hover:text-sky-300 hover:bg-slate-900 transition-all flex items-center justify-between" data-section="about">
                     <span>About</span>
+                    <span class="text-xs text-slate-500">&rarr;</span>
+                </a>
+                <a href="{% if request.path == '/' %}#experience{% else %}/#experience{% endif %}" class="mobile-nav-link {% if active_page == 'experience' %}nav-active{% endif %} py-3 px-4 rounded-xl text-slate-200 hover:text-sky-300 hover:bg-slate-900 transition-all flex items-center justify-between" data-section="experience">
+                    <span>Experience</span>
                     <span class="text-xs text-slate-500">&rarr;</span>
                 </a>
                 <a href="{% if request.path == '/' %}#skills{% else %}/#skills{% endif %}" class="mobile-nav-link {% if active_page == 'skills' %}nav-active{% endif %} py-3 px-4 rounded-xl text-slate-200 hover:text-sky-300 hover:bg-slate-900 transition-all flex items-center justify-between" data-section="skills">
